@@ -35,7 +35,7 @@
 
     <nav class="navbar__links">
       <a href="licence-guide.html">Licence guides</a>
-      <a href="../schools.html">Reviews</a>
+      <a href="../schools.html">Schools</a>
     </nav>
 
     <div class="navbar__mobile-icons">
@@ -92,7 +92,10 @@
     <div class="content-card" style="text-align:center;">
       <h2 class="content-card__title" style="border-bottom:none; padding-bottom:0;">Get in touch</h2>
       <p class="text-body-sm" style="color:var(--text-2); margin:0 0 20px;">We reply directly, no forms or dashboards to fight with.</p>
-      <a href="mailto:hello@upshiftuk.com?subject=Listing%20my%20school%20on%20Upshift" class="btn btn--primary">Email hello@upshiftuk.com</a>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <a href="mailto:hello@upshiftuk.com?subject=Listing%20my%20school%20on%20Upshift" class="btn btn--primary">Email hello@upshiftuk.com</a>
+        <button type="button" class="btn btn--ghost btn--sm copy-email-btn" data-email="hello@upshiftuk.com">Copy email address</button>
+      </div>
     </div>
 
   </div>
@@ -137,6 +140,21 @@
     <p class="text-fine">© 2026 Upshift. All rights reserved.</p>
   </div>
 </footer>
+
+<script>
+(function () {
+  var btns = document.querySelectorAll('.copy-email-btn');
+  btns.forEach(function (btn) {
+    var defaultLabel = btn.textContent;
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(btn.dataset.email).then(function () {
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.textContent = defaultLabel; }, 2000);
+      });
+    });
+  });
+})();
+</script>
 
 </body>
 </html>

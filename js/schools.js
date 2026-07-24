@@ -241,6 +241,23 @@ window.Schools = (function () {
     });
   }
 
+  // Fills in <* data-course-price data-licence="cbt"> placeholders on a
+  // school profile page from the same SCHOOLS data the PLP shows prices
+  // from, so a price seen while filtering schools.html doesn't vanish
+  // behind a vague disclaimer once you click through to the profile.
+  function renderCoursePrices(schoolId) {
+    var school = SCHOOLS.filter(function (s) { return s.id === schoolId; })[0];
+    if (!school) return;
+
+    var els = document.querySelectorAll('[data-course-price]');
+    els.forEach(function (el) {
+      var licence = el.getAttribute('data-licence');
+      el.textContent = school.prices[licence] !== undefined
+        ? '£' + school.prices[licence]
+        : 'Price on request';
+    });
+  }
+
   // ------------------------------------------------------------------
   // URL state — the two params consumers (index.html linking out,
   // schools.html reading/writing) share this one contract so they can't
@@ -279,6 +296,7 @@ window.Schools = (function () {
     sortSchools: sortSchools,
     renderListingCard: renderListingCard,
     renderTeaser: renderTeaser,
+    renderCoursePrices: renderCoursePrices,
     toQueryString: toQueryString,
     parseQueryString: parseQueryString
   };
