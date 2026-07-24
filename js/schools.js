@@ -88,8 +88,13 @@ window.Schools = (function () {
     var licences = school.licences || [];
     if (licences.length === 0) return null;
 
-    if (activeLicence && school.prices[activeLicence] !== undefined) {
-      return LICENCE_LABELS[activeLicence] + ' — £' + school.prices[activeLicence];
+    // A licence a school teaches but hasn't published a fixed price for
+    // (e.g. "by arrangement") must say so honestly rather than falling
+    // back to a different licence's price, which would misrepresent it.
+    if (activeLicence && licences.indexOf(activeLicence) !== -1) {
+      return school.prices[activeLicence] !== undefined
+        ? LICENCE_LABELS[activeLicence] + ' — £' + school.prices[activeLicence]
+        : LICENCE_LABELS[activeLicence] + ' — price on request';
     }
 
     var prices = licences.map(function (l) { return school.prices[l]; }).filter(function (p) { return p !== undefined; });
@@ -127,9 +132,19 @@ window.Schools = (function () {
     }
 
     if (sortBy === 'price') {
+      // A school with no published price for the relevant licence (or no
+      // published prices at all) sorts last rather than crashing or
+      // silently comparing against an unrelated licence's price.
+      function cheapest(school) {
+        if (activeLicence && school.prices[activeLicence] !== undefined) return school.prices[activeLicence];
+        var known = school.licences.map(function (l) { return school.prices[l]; }).filter(function (p) { return p !== undefined; });
+        return known.length ? Math.min.apply(null, known) : null;
+      }
       return list.sort(function (a, b) {
-        var pa = a.prices[activeLicence] !== undefined ? a.prices[activeLicence] : Math.min.apply(null, a.licences.map(function (l) { return a.prices[l]; }));
-        var pb = b.prices[activeLicence] !== undefined ? b.prices[activeLicence] : Math.min.apply(null, b.licences.map(function (l) { return b.prices[l]; }));
+        var pa = cheapest(a);
+        var pb = cheapest(b);
+        if (pa === null) return pb === null ? 0 : 1;
+        if (pb === null) return -1;
         return pa - pb;
       });
     }
@@ -160,32 +175,44 @@ window.Schools = (function () {
     return (tags || []).map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('');
   }
 
-  // Full interactive card — price, distance, badges, tags. Used on
-  // schools.html.
+  // Full interactive card — price, distance, badges, tags, and a "Visit
+  // website" CTA. Used on schools.html. A <div> rather than an <a>, since
+  // the website CTA needs its own real link and an <a> can't contain
+  // another <a> — the title is a real link to the profile page, "Visit
+  // website" a real outbound link, and clicking anywhere else on the
+  // card navigates to the profile too (event delegation below), so the
+  // whole-card-clickable feel is kept without nesting anchors.
   function renderListingCard(school, opts) {
     opts = opts || {};
     var price = priceLabel(school, opts.activeLicence);
     var dist = opts.distanceById ? distanceLabel(opts.distanceById.get(school.id)) : null;
 
-    var a = document.createElement('a');
-    a.href = school.href;
-    a.className = 'listing-card';
-    a.innerHTML =
+    var card = document.createElement('div');
+    card.className = 'listing-card';
+    card.style.cursor = 'pointer';
+    card.innerHTML =
       '<div class="listing-card__image">' +
         '<span class="listing-card__rank">' + school.area + '</span>' +
         school.shortName +
       '</div>' +
       '<div class="listing-card__content">' +
         '<div class="listing-card__rating"><span class="tag">No reviews yet</span></div>' +
-        '<h3>' + school.name + '</h3>' +
+        '<h3><a href="' + school.href + '">' + school.name + '</a></h3>' +
         (price ? '<p class="card-price">' + price + '</p>' : '') +
         '<p class="text-body-sm" style="color:var(--text-2)">' + school.description + '</p>' +
         (dist ? '<p class="card-distance' + (dist.unavailable ? ' card-distance--unavailable' : '') + '">' + dist.text + '</p>' : '') +
         '<div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">' +
           badgesHtml(school.licences) + tagsHtml(school.tags) +
         '</div>' +
+        (school.website ? '<div style="margin-top:12px;"><a href="' + school.website + '" class="btn btn--primary btn--sm" target="_blank" rel="noopener">Visit website</a></div>' : '') +
       '</div>';
-    return a;
+
+    card.addEventListener('click', function (e) {
+      if (e.target.closest('a')) return; // real links (title, website) behave normally
+      window.location.href = school.href;
+    });
+
+    return card;
   }
 
   // Generic, non-interactive teaser card for the homepage — name, area,
