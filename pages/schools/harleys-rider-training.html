@@ -35,7 +35,7 @@
 
     <nav class="navbar__links">
       <a href="../licence-guide.html">Licence guides</a>
-      <a href="../../schools.html">Reviews</a>
+      <a href="../../schools.html">Schools</a>
     </nav>
 
     <div class="navbar__mobile-icons">
@@ -86,30 +86,42 @@
           <h2 class="content-card__title">Courses offered</h2>
           <div style="display:flex; flex-direction:column; gap:16px;">
             <div>
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                <span class="licence-badge licence-badge--cbt">CBT</span>
-                <span class="text-semibold">Compulsory Basic Training</span>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="licence-badge licence-badge--cbt">CBT</span>
+                  <span class="text-semibold">Compulsory Basic Training</span>
+                </div>
+                <span class="text-semibold" data-course-price data-licence="cbt"></span>
               </div>
               <p class="text-body-sm" style="color:var(--text-2); margin:0;">Required before riding on the road on a provisional licence.</p>
             </div>
             <div>
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                <span class="licence-badge licence-badge--a1">A1</span>
-                <span class="text-semibold">Restricted licence (A1)</span>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="licence-badge licence-badge--a1">A1</span>
+                  <span class="text-semibold">Restricted licence (A1)</span>
+                </div>
+                <span class="text-semibold" data-course-price data-licence="a1"></span>
               </div>
               <p class="text-body-sm" style="color:var(--text-2); margin:0;">From age 17, on a bike up to 125cc. Needs a valid theory test certificate and CBT first — leads to a full licence with no L-plates or motorway restrictions.</p>
             </div>
             <div>
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                <span class="licence-badge licence-badge--a2">A2</span>
-                <span class="text-semibold">Restricted licence (A2)</span>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="licence-badge licence-badge--a2">A2</span>
+                  <span class="text-semibold">Restricted licence (A2)</span>
+                </div>
+                <span class="text-semibold" data-course-price data-licence="a2"></span>
               </div>
               <p class="text-body-sm" style="color:var(--text-2); margin:0;">CBT and the theory test come first, then A2 training on a restricted bike. PAYG lessons or full package courses, with gear hire (helmet, jacket, gloves) included and a free first lesson.</p>
             </div>
             <div>
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                <span class="licence-badge licence-badge--full-a">Full A</span>
-                <span class="text-semibold">Full licence training</span>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="licence-badge licence-badge--full-a">Full A</span>
+                  <span class="text-semibold">Full licence training</span>
+                </div>
+                <span class="text-semibold" data-course-price data-licence="full-a"></span>
               </div>
               <p class="text-body-sm" style="color:var(--text-2); margin:0;">Full, unrestricted motorcycle licence training.</p>
             </div>
@@ -121,7 +133,7 @@
               <p class="text-body-sm" style="color:var(--text-2); margin:0;">Focused coaching to prepare for Module 1 and Module 2 test day.</p>
             </div>
           </div>
-          <p class="text-fine" style="color:var(--text-3); margin-top:16px;">Course pricing changes — confirm current prices directly with the school.</p>
+          <p class="text-fine" style="color:var(--text-3); margin-top:16px;">Prices are provided by the school and can change — confirm the exact cost when you book.</p>
         </div>
 
         <div class="content-card">
@@ -183,6 +195,10 @@
     <p class="text-fine">© 2026 Upshift. All rights reserved.</p>
   </div>
 </footer>
+
+<script src="../../js/schools-data.js"></script>
+<script src="../../js/schools.js"></script>
+<script>Schools.renderCoursePrices('harleys-rider-training');</script>
 
 </body>
 </html>

@@ -35,7 +35,7 @@
 
     <nav class="navbar__links">
       <a href="licence-guide.html">Licence guides</a>
-      <a href="../schools.html">Reviews</a>
+      <a href="../schools.html">Schools</a>
     </nav>
 
     <div class="navbar__mobile-icons">
@@ -67,7 +67,10 @@
 
       <h2 style="margin-top:0;">General enquiries</h2>
       <p class="text-body" style="color:var(--text-2)">Spotted something wrong with a listing, have a question about a licence, or just want to say hello — email us directly.</p>
-      <a href="mailto:hello@upshiftuk.com" class="btn btn--primary" style="margin-top:8px;">Email hello@upshiftuk.com</a>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:8px;">
+        <a href="mailto:hello@upshiftuk.com" class="btn btn--primary">Email hello@upshiftuk.com</a>
+        <button type="button" class="btn btn--ghost btn--sm copy-email-btn" data-email="hello@upshiftuk.com">Copy email address</button>
+      </div>
 
       <h2 style="margin-top:32px;">Run a training school?</h2>
       <p class="text-body" style="color:var(--text-2); margin-bottom:0;">Use our <a href="list-your-school.html" style="color:var(--orange)">list your school</a> page instead — it tells us exactly what we need to get your profile live or corrected.</p>
@@ -115,6 +118,21 @@
     <p class="text-fine">© 2026 Upshift. All rights reserved.</p>
   </div>
 </footer>
+
+<script>
+(function () {
+  var btns = document.querySelectorAll('.copy-email-btn');
+  btns.forEach(function (btn) {
+    var defaultLabel = btn.textContent;
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(btn.dataset.email).then(function () {
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.textContent = defaultLabel; }, 2000);
+      });
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
