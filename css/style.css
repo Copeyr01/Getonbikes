@@ -1,46 +1,55 @@
 /* ==========================================================================
-   Upshift — Design System
+   Upshift — Design System (v2: "Carwow-style")
    Single shared stylesheet. All tokens as CSS custom properties.
    See /design.md for the full spec this file implements.
+
+   Token NAMES are kept as-is from the v1 monochrome pass (--orange,
+   --text, --border, --off, --navy etc.) even though this palette maps to
+   a different semantic system (accent/ink/line/surface-alt) — every page
+   already references these names via var(), so changing values here
+   re-skins the whole site with zero HTML changes. Renaming would mean
+   touching every inline style="color:var(--orange)" for no visual gain.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    Tokens
    -------------------------------------------------------------------------- */
 :root {
-  /* Colour — grayscale only, no colour accent */
-  --orange: #0A0A0A;
-  --orange-dark: #333333;
-  --orange-light: #F0F0F0;
-  --green: #0A0A0A;
-  --green-light: #F0F0F0;
-  --text: #0A0A0A;
-  --text-2: #454545;
-  --text-3: #767676;
+  /* Colour — single accent (light blue), ink greys, line/surface neutrals */
+  --orange: #1C7ED6;        /* = "accent" in design.md */
+  --orange-dark: #135A9E;   /* = "accent-hover" */
+  --orange-light: #E8F2FC;
+  --green: #1C7ED6;         /* ratings/positive indicators reuse the single accent — no separate success colour */
+  --green-light: #E8F2FC;
+  --text: #12203D;          /* = "ink" */
+  --text-2: #4A5568;        /* = "ink-soft" */
+  --text-3: #8A93A0;        /* = "ink-mute" (meta text, placeholders) */
+  --text-4: #5B6472;        /* = "ink-faint" (subtitles, descriptions) — extra tier vs v1, only text-2/text-3 existed before */
   --white: #FFFFFF;
-  --off: #F4F4F4;
-  --border: #0A0A0A;
-  --border-hover: #0A0A0A;
-  --navy: #0A0A0A;
+  --off: #F4F6F8;           /* = "surface-alt" */
+  --border: #E7EAEE;        /* = "line" */
+  --border-hover: #C9D0D9;
+  --navy: #FFFFFF;          /* footer background — light footer in this system, not dark */
 
-  /* Licence badges: plain outlined boxes, no colour-coding */
+  /* Licence badges: plain outlined boxes, no colour-per-licence coding (unchanged principle from v1) */
   --licence-cbt-bg: #FFFFFF;
-  --licence-cbt-text: #0A0A0A;
+  --licence-cbt-text: #12203D;
   --licence-a1-bg: #FFFFFF;
-  --licence-a1-text: #0A0A0A;
+  --licence-a1-text: #12203D;
   --licence-a2-bg: #FFFFFF;
-  --licence-a2-text: #0A0A0A;
+  --licence-a2-text: #12203D;
   --licence-fulla-bg: #FFFFFF;
-  --licence-fulla-text: #0A0A0A;
+  --licence-fulla-text: #12203D;
   --licence-mod-bg: #FFFFFF;
-  --licence-mod-text: #0A0A0A;
+  --licence-mod-text: #12203D;
 
-  /* Radius — square corners throughout */
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  --radius-pill: 0;
+  /* Radius — rounded rectangles, not square, not fully pill for buttons/search */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;   /* true pill — small chips/tag badges only */
+  --radius-btn: 8px;      /* buttons + search bar — "rounded rectangle," not pill, per design.md */
 
   /* Spacing scale */
   --space-1: 4px;
@@ -56,13 +65,27 @@
   --space-11: 56px;
   --space-12: 64px;
 
-  /* Shadows — flat, no elevation */
+  /* Shadows — flat, no elevation (unchanged: borders do all the separation work) */
   --shadow-sm: none;
   --shadow-md: none;
   --shadow-hover: none;
 
   /* Typography */
-  --font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-stack: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+/* Space Grotesk, self-hosted (not linked to Google's CDN — avoids a
+   third-party request that would sit oddly next to the Cookie Policy's
+   "no third-party trackers" claim). One variable-font file covers the
+   whole 400–700 weight range used sitewide; Space Grotesk doesn't ship
+   an 800 cut, so anywhere the design calls for 800 (step numerals,
+   licence-guide codes) uses 700, the heaviest available weight, instead. */
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('../assets/fonts/space-grotesk-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* --------------------------------------------------------------------------
@@ -99,15 +122,17 @@ a {
   text-decoration: none;
 }
 
-/* Body-copy links (the ones styled inline with var(--orange)) need an
-   affordance that isn't colour, since this pass is black/white only ahead
-   of the full brand colour. Underline is the standard colour-independent
-   signal. NOTE: once real brand colour lands, reconsider whether this
-   token should regain a real accent value and whether underline is still
-   wanted alongside it, or whether colour alone becomes the differentiator
-   again. */
-a[style*="var(--orange)"] {
+/* v1 forced an always-on underline here because the monochrome pass had
+   no colour to distinguish links with. Now that --orange is a real
+   accent colour, colour alone is a legitimate, standard differentiator
+   (this was the exact "revisit" flagged when that rule was written) —
+   underline moves to hover only, as a secondary non-colour signal. */
+a[style*="var(--orange)"]:hover {
   text-decoration: underline;
+}
+
+.accent {
+  color: var(--orange);
 }
 
 .sr-only {
@@ -300,7 +325,7 @@ p,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-btn);
   font-weight: 600;
   border: 2px solid transparent;
   padding: 11px 22px;
@@ -375,7 +400,7 @@ p,
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(10, 10, 10, 0.7);
+  background: rgba(18, 32, 61, 0.7);
   color: #fff;
   border-radius: var(--radius-pill);
   padding: 4px 12px;
@@ -527,10 +552,10 @@ p,
 .hero-search {
   display: flex;
   align-items: center;
-  border: 2px solid var(--text);
-  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
   height: 52px;
-  background: var(--white);
+  background: var(--off);
   box-shadow: var(--shadow-md);
 }
 
@@ -567,7 +592,7 @@ p,
   align-items: center;
   background: var(--off);
   border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-btn);
   height: 42px;
   padding: 0 16px;
 }
@@ -715,7 +740,7 @@ p,
 }
 
 .hero__subtitle {
-  color: var(--text-2);
+  color: var(--text-4);
   margin: 12px 0 24px;
 }
 
@@ -798,7 +823,8 @@ p,
    -------------------------------------------------------------------------- */
 .footer {
   background: var(--navy);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-3);
+  border-top: 1px solid var(--border);
   padding: 48px 0 28px;
 }
 
@@ -809,7 +835,7 @@ p,
 }
 
 .footer a:hover {
-  color: #fff;
+  color: var(--text);
 }
 
 /* --------------------------------------------------------------------------

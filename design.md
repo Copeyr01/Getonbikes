@@ -1,8 +1,8 @@
-# Upshift — Design System
+# Upshift — Design System (v2: "Carwow-style")
 
-Near-wireframe UI: grayscale only, square corners, flat surfaces, minimal decoration — functionality is the whole point, not a visual language. This supersedes an earlier "functional-first" pass that still used a single orange accent and rounded corners; that pass is itself now one step short of what was asked for, so the system below removes colour and rounding entirely. Two earlier bold explorations ("Night Ride" — black/blue poster system, and a cut-corner "sharp/premium" system) remain paused. See Archived directions.
+**This is a design-direction test, on branch `claude/design-v2-carwow`, not yet merged.** It replaces the monochrome wireframe pass (v1 — grayscale, square corners, no accent) with a real visual system: single light-blue accent, Space Grotesk throughout, rounded-but-not-pill shapes. No features/functionality changed — same search, same PLP filters, same licence quiz, same school data; this is a re-skin only. See Archived directions for v1's full spec, parked in case this test isn't adopted.
 
-**Status:** applied site-wide. Every page (`index.html`, school profiles, licence guide, `list-your-school.html`, legal pages) runs on the one shared stylesheet, `css/style.css`.
+**Status:** applied site-wide via the same shared stylesheet, `css/style.css` — every page (`index.html`, `schools.html`, school profiles, licence guide, legal pages) already referenced its colours/radii/font as CSS custom properties, so this pass changed token *values* rather than rewriting each page. The one exception is the footer, which flips from dark to light and needed its hardcoded inline `color:#fff` overrides removed sitewide (13 files).
 
 ## Brand
 - **Name:** Upshift (working domain: upshiftuk.com)
@@ -13,74 +13,89 @@ Near-wireframe UI: grayscale only, square corners, flat surfaces, minimal decora
 
 ## Colour tokens
 
-Grayscale only — no colour accent anywhere in the UI.
+Single accent (light blue) + ink/line/surface neutrals. Token *names* are kept from v1 (`--orange`, `--text`, `--border`, `--off`, `--navy` etc.) even though they now carry a different semantic system — every page already references these names via `var()`, so re-skinning is a values-only change in `:root`, zero HTML touched for colour.
 
-| Token | Hex | Usage |
-|---|---|---|
-| `--text` | `#0A0A0A` | Headlines, primary text, primary button fill, borders |
-| `--text-2` | `#454545` | Body copy |
-| `--text-3` | `#767676` | Meta text, captions, fine print, hero eyebrow |
-| `--white` | `#FFFFFF` | Page/card surfaces |
-| `--off` | `#F4F4F4` | Section backgrounds, hover state for cards/rows |
-| `--border` / `--border-hover` | `#0A0A0A` | Card/input borders — same value; hover feedback comes from a background tint, not a border-colour change |
-| `--navy` | `#0A0A0A` | Footer background, placeholder image tiles (name kept for minimal diff; value is now plain black) |
-| `--orange` / `--orange-dark` / `--orange-light` | `#0A0A0A` / `#333333` / `#F0F0F0` | Legacy token names kept so old inline styles (`color:var(--orange)` on contact links etc.) still resolve — now just dark/light grays, not a colour accent |
-| `--green` / `--green-light` | `#0A0A0A` / `#F0F0F0` | Same story — kept for the same reason, resolves to grayscale |
+| Token (v1 name) | = design-system role | Hex | Usage |
+|---|---|---|---|
+| `--orange` | accent | `#1C7ED6` | Wordmark "Up" (`.accent`), CTA button fills, star ratings, licence-guide codes — reserved for one element/word at a time, never whole paragraphs |
+| `--orange-dark` | accent-hover | `#135A9E` | Link/accent hover state |
+| `--text` | ink | `#12203D` | Headlines, primary text, wordmark "shift" |
+| `--text-2` | ink-soft | `#4A5568` | Nav links, body copy (the workhorse grey — used almost everywhere body text isn't a headline) |
+| `--text-3` | ink-mute | `#8A93A0` | Meta text, placeholders, fine print, hero eyebrow, footer links |
+| `--text-4` (new) | ink-faint | `#5B6472` | Hero subtitle only, so far — the one component the source doc calls out as a distinct tier from body copy |
+| `--white` | — | `#FFFFFF` | Page/card surfaces |
+| `--off` | surface-alt | `#F4F6F8` | Search bar fill, section backgrounds, hover tint |
+| `--border` / `--border-hover` | line | `#E7EAEE` / `#C9D0D9` | Card/input borders, footer top divider |
+| `--navy` | footer bg | `#FFFFFF` | Footer is now light, not dark — name kept for minimal diff |
+| `--green` / `--green-light` | — | `#1C7ED6` / `#E8F2FC` | Ratings/distance-away text reuse the single accent rather than a separate success colour — the system only defines one accent |
 
-No element gets a colour treatment other elements don't. Licence badges, which previously colour-coded by licence type, are now plain white boxes with a black border and black text — wayfinding is by label text only.
+**Licence badges stay neutral** (plain white/outlined, no colour-per-licence coding) — the source doc is explicit about this for the licence chip row, and it's extended here to the small inline CBT/A1/A2/Full A badges too, for consistency.
+
+**The wordmark's `.accent` span was already in every page's markup** (`<span class="accent">Up</span>`) with no matching CSS rule — it silently rendered as plain ink since v1 had nothing to give it. Added `.accent { color: var(--orange); }` and it's now live everywhere with zero markup changes.
+
+**Inline body links no longer need a forced underline.** v1 added `a[style*="var(--orange)"] { text-decoration: underline; }` because the monochrome pass had no colour to distinguish a link from bold text — that rule's own comment flagged "revisit ... once real brand colour lands." Now that `--orange` is a real accent colour, colour alone is a standard, sufficient differentiator; the underline moved to `:hover` only, as a secondary non-colour signal.
 
 ---
 
 ## Typography
 
-System font stack (`-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif`) — no webfonts to load, no third-party font CDN calls to disclose in the Cookie policy.
+**Space Grotesk**, self-hosted at `assets/fonts/space-grotesk-latin.woff2` — one variable-weight file (400–700) covers everything, headings and body alike, with the system stack as fallback (`--font-stack`). Self-hosted rather than linked to Google's CDN: this project already tried self-hosting this exact family once before (see Archived directions — "Night Ride" used self-hosted Space Grotesk/Unbounded, removed when that direction was retired) and a live Google Fonts `<link>` would be a third-party request sitting awkwardly next to the Cookie Policy's "no third-party trackers" claim.
 
-- Headings: 700–800 weight, sentence case (never all-caps outside of `.text-label` eyebrows).
+**Space Grotesk tops out at weight 700** — it doesn't ship an 800 cut. Wherever the source doc specifies 800 (step numerals, licence-guide codes — neither of which exist as built components yet, see Components below), 700 is used instead.
+
+- Headings: 700 weight, sentence case (never all-caps outside `.text-label` eyebrows) — same rule as v1, just a different typeface.
 - Body: 400 weight, 1.65 line-height for readability.
-- `.text-label`: 700 weight, uppercase, letter-spaced — reserved for eyebrows/section labels, not body copy.
+- `.text-label`: 700 weight, uppercase, letter-spaced — eyebrows/section labels only.
 
 ---
 
 ## Shape language
 
-Square corners, flat surfaces, everywhere:
-- **Buttons, search bars, badges, tags, pills:** `border-radius: 0` (all `--radius-*` tokens are `0`).
-- **Cards (listing cards, licence cards, content cards):** `1px` solid black border, white fill, square corners.
-- **Shadows:** none (`--shadow-sm` / `--shadow-md` / `--shadow-hover` are all `none`). Hover feedback on cards/rows comes from a plain background tint (`--off`) instead.
-- **No gradients.** Placeholder image tiles (school initials) are a flat black fill, not the earlier navy gradient.
+Rounded, but not pill-shaped for buttons/search — flat throughout, borders (not shadows) do the separation work:
+- **Buttons + search bars:** `border-radius: var(--radius-btn)` = `8px` — "rounded rectangle," a new token split out from `--radius-pill` specifically because the source doc puts buttons/search at a different radius than small chip badges.
+- **Cards, content cards, dropdowns:** `10–12px` (`--radius-lg` / `--radius-xl`).
+- **Small chip/tag badges** (licence badges, tags, region pills, the tiny overlay labels on listing-card images): kept as a true pill (`--radius-pill` = `999px`) — the source doc doesn't cover these specifically, and a 10px radius reads as barely-rounded on an element that's only ~24px tall, so full pill was the more natural read for "same design guidelines, applied to something the doc doesn't mention."
+- **Shadows:** still none (`--shadow-*` all `none`) — unchanged from v1, borders do all the separation work in this system too.
+- **No gradients.** Placeholder image tiles (school initials) are a flat ink-navy fill.
 
 ---
 
 ## Components
 
 ### Nav
-Sticky white bar, plain-text wordmark, a school-search box, quiet text links (licence guides / regions / reviews) — no "List your school" CTA here. It was removed from the persistent nav (visible on every pageview, for every rider) since the site is riders-first and schools are onboarded via outreach, not a self-serve funnel; it remains, once, in the footer's Company column.
+Sticky white bar, wordmark now with "Up" in accent blue (`.accent`, see Colour tokens), text links (Licence guides / Schools) in ink-soft. **Two things the source doc specifies that aren't here, deliberately:**
+- **No "Log in" link.** There's no accounts/auth system on this site — adding one would be a dead link, and this pass is design-only, not a licence to add unbuilt features.
+- **No "List your school" pill button in the nav.** This was deliberately removed earlier (explicit product decision — riders-first framing, schools onboarded via outreach not a self-serve funnel), not a styling call this redesign should quietly reverse. It stays in the footer's Company column, same as before.
 
 **Mobile (≤700px):** a traditional icon-based nav rather than just hiding things — the inline search box and text links are replaced by two square icon buttons (magnifying glass, hamburger), each revealing its full content as a dropdown panel anchored under the nav bar. Built with a pure-CSS checkbox-toggle pattern (hidden `<input type="checkbox">` + `<label>` icon buttons + `:checked ~` sibling selectors) rather than JavaScript, so it works identically on every page without needing a script tag added to each one — this is a plain static multi-page site with no shared JS include.
 
 ### Hero
-White background, gray eyebrow label, plain heading + subtitle, then the primary action — two underlined text links (not boxed tabs, so they read as quiet mode-switches rather than competing with the actual form fields below them) above a search control, both on one row:
-- **"Search by Licence"** (default): a licence **dropdown** (All licences / CBT / A1 / A2 / Full A — a `<select>`, not buttons, so it reads as a required-looking form field rather than a set of filter chips) + an optional postcode field + one "Find schools" submit, all inline on a single row (wrapping on narrow screens). Postcode is optional — licence alone filters the list below; adding a postcode also sorts it nearest-first and shows a distance line per card. An inline error appears under the row for anything that doesn't look like a UK postcode, rather than silently failing.
-- **"Search by School"**: a single name-search input with a live results dropdown, for the minority of visitors who already know which school they want. Demoted relative to the licence mode since most visitors don't yet know which school they're looking for — that's the problem the site exists to solve.
+White background, gray eyebrow label, heading + subtitle (now `--ink-faint`, the one component the source doc splits out from body-copy grey), then the primary action — two text links as quiet mode-switches above a search control (now `--off`/surface-alt fill, `8px` rounded-rect, not the old thick black border), both on one row:
+- **"Search by Licence"** (default): a licence **dropdown** + an optional postcode field + one accent-filled "Find schools" submit.
+- **"Search by School"**: a single name-search input with a live results dropdown.
 
-Both modes filter/sort the same "Edinburgh training schools" list below rather than rendering a separate results view. The top-nav search box is a shortcut into "Search by School."
+Kept as our own two functional tabs rather than relabelled to the source doc's generic "Find a school / List my school / Read reviews" — that's template copy for a tab set we don't have; restyling the real tabs (colour/shape/type) is the design-only remit here, not relabelling them to match a hypothetical feature set.
+
+**Quiz callout, new:** "Not sure what you need?" used to be a plain underlined text link below the search row — now a full bordered/tinted callout card (accent border, light-blue fill, 🤔 icon, bold title + one-line description + an accent "Take the quiz →" CTA that flips to "Hide the quiz ↑" when open), directly below the search where it already sat. Same click target, same JS toggle logic — only the closed-state markup changed (the toggle handler used to blow away the button's `textContent` on click, which would have destroyed this richer markup; it now only updates the CTA span's text).
 
 ### Licence chip / card row
-Four cards (CBT / A1 / A2 / Full A — not five), each a plain outlined licence-code box + short description + school count, linking into the licence guide. A note beneath the grid explains that Mod 1 & 2 isn't a fifth licence — it's the shared two-part practical test for A1/A2/Full A — and links to that explainer instead of presenting it as a peer option.
+Four cards (CBT / A1 / A2 / Full A — not five), each a plain outlined licence-code box + short description + school count, linking into the licence guide. Neutral — no colour-per-licence coding, per the source doc's explicit instruction for this component.
 
 ### Listing cards
-White rows, square corners, 1px black border. Flat black placeholder image tile (initials) left, school name, then a bold price line, then a short description + plain licence badges + tags, honest "No reviews yet" tag rather than a fabricated rating. A live distance line appears once a postcode search has resolved ("2.3 mi away" / "Distance unavailable" for schools without a confirmed postcode — never a guessed figure). Hover tints the row background, no shadow.
+White rows, `10–12px` rounded corners, `1px` line border. Flat ink-navy placeholder image tile (initials) left, school name, then a bold price line, then a short description + neutral licence badges + tags, honest "No reviews yet" tag rather than a fabricated rating. Restyled colours/shape only — the underlying data-driven rendering (`js/schools.js`'s `renderListingCard`/`renderTeaser`, reading from `js/schools-data.js`) is untouched.
 
-**Pricing:** stored per school, per licence (`data-price-cbt`, `data-price-a2`, `data-price-full-a`, etc.) since one school's CBT and Full A courses cost different amounts. Cards show "Prices from £X" (the lowest figure across whatever that school offers) by default, switching to the exact price for the specific licence once "Search by Licence" is used with one selected. **These are placeholder figures, not real prices** — deliberately made to look like normal numbers (no "estimated" label) since the site is password-gated pre-launch; task #9 covers getting real pricing from each school before the gate comes off.
+**Pricing is real now**, not placeholder (task #9, completed separately from this design pass) — see "School data corrections" below for where each school's numbers came from.
+
+**Not built: the source doc's "trending course cards" (photo slot) or "trust/reviews grid" (star ratings, quotes, "1,140+ verified reviews").** No real photography exists yet (task #12, open), and there are zero real reviews on this site — fabricating either would contradict the honesty principle this project has held to everywhere else ("No reviews yet" is said plainly, repeatedly, on purpose). These are documented here as patterns to build once real photography/reviews exist, not built now.
 
 ### Footer
-Black panel, 4-column grid: wordmark + one-line description, then Licences / Company / Legal link columns, copyright bar beneath.
+**Light now, not dark** — white background, `--ink-mute` links, `1px` line top border, 4-column grid (wordmark + one-line description, then Licences / Company / Legal link columns), copyright bar beneath. Required removing hardcoded `color:#fff` inline overrides (wordmark, column headers) and a hardcoded `rgba(255,255,255,0.15)` divider from all 13 pages, since the footer used to be a genuinely dark panel, not just a token-value swap.
 
 ---
 
 ## Layout
 
-- Page container: `1160px` max-width, `padding: 0 24px`.
+- Page container: `1160px` max-width, `padding: 0 24px` — kept from v1 rather than the source doc's `1440px`/`40px` spec. Widening the whole page is a structural layout change, not a colour/type/shape re-skin, and wasn't part of what this pass scoped or was approved to touch.
 - Licence grid: `repeat(auto-fill, minmax(155px, 1fr))`, `gap: 10px`.
 - Listings: single column, `gap: 12px`.
 - Footer grid: `repeat(4, 1fr)`, `gap: 32px` (collapses to 2 cols, then 1, on smaller screens).
@@ -102,22 +117,28 @@ Black panel, 4-column grid: wordmark + one-line description, then Licences / Com
 - **Rebrand:** GetOnBikes → Upshift. All visible brand text, wordmarks, and contact email updated; the live site still deploys from `getonbikes.vercel.app` (domain migration is separate infrastructure work, not yet done).
 - **Licence, not licence-plus-test, is the pickable unit.** CBT, A1, A2 and Full A are real, separate licence categories. Mod 1 & 2 is the practical test shared by A1/A2/Full A, not a fifth parallel licence — so it's a note/tag, not a peer filter option, in both the hero picker and the homepage licence-info grid. `licence-guide.html`'s own top-of-page anchor row still lists it as a 5th jump-link, since that's in-page navigation to a section that genuinely exists there, not a claim of peer status — worth revisiting for consistency later.
 - **Guided search over freeform.** The homepage's single combined text box (name/postcode/licence keyword all mixed) was replaced by two explicit modes — pick a licence (+ optional postcode) or search a school by name — since most visitors don't know a school name yet and shouldn't have to guess the right free-text syntax to get a useful result.
+- **v2 ("Carwow-style") is a design-only pass, tested on a branch.** Given a source doc for a new visual direction, the goal was re-skin, not rebuild: same search/PLP/quiz/data, different colours/type/shape. Concretely this meant *not* adding "Log in" or a nav "List your school" CTA (unbuilt/deliberately-removed features respectively), *not* relabelling the hero's two real tabs to match the doc's generic tab-set template, and *not* fabricating star ratings or reviews to fill the doc's "trust grid" component — see Components above for each.
+- **Token values changed, not names, again.** Same reasoning as the v1 rebrand of `--orange`/`--green`: every page already references these custom-property names, so re-skinning is a `:root` values-only edit. Extended this pass to `--border`, `--off`, `--navy` etc. too.
+- **Weight 800 → 700.** The source doc calls for weight 800 on step numerals and licence-guide codes; Space Grotesk doesn't ship an 800 cut, so 700 (the heaviest available) is used everywhere the doc says 800.
 
 ---
 
 ## Archived directions
 
 Not deleted — parked in case revisited later:
-- **"Night Ride"** — black canvas, poster-scale Unbounded type, light-blue accent, fully rounded pill shapes. Was briefly live on the homepage only (`css/homepage.css`, now removed) before the functional-first pass superseded it. Self-hosted Unbounded/Space Grotesk `.woff2` fonts were removed along with it.
+- **v1 monochrome wireframe** — grayscale only (`--text`/`--border`/etc. all near-black), square corners (`--radius-*` all `0`), system font stack, dark/black footer. The design system in place immediately before this v2 test; every token/shape/component description above described this until the Carwow-style pass replaced it. Full original spec is preserved in this project's git history (the commit before `claude/design-v2-carwow` branched) if this test isn't adopted and v1 needs restoring exactly.
+- **"Night Ride"** — black canvas, poster-scale Unbounded type, light-blue accent, fully rounded pill shapes. Was briefly live on the homepage only (`css/homepage.css`, now removed) before the functional-first pass superseded it. Self-hosted Unbounded/Space Grotesk `.woff2` fonts were removed along with it — notably, the same Space Grotesk family is back, self-hosted again, in v2 above.
 - **Cut-corner "sharp/premium"** — warm paper background, single cut-corner clip-path on filled surfaces, orange accent. Retired before Night Ride was built; never implemented in code.
-- **First functional-first pass** — same layout as today, but kept a single orange accent colour and rounded corners (12–16px, pill buttons). Superseded by this wireframe pass within the same day.
+- **First functional-first pass** — same layout as today, but kept a single orange accent colour and rounded corners (12–16px, pill buttons). Superseded by the wireframe pass within the same day.
 
 ## Open items
 
-- Real photography/logo assets still don't exist — all imagery is placeholder flat-black tiles with initials.
-- Task #9 (verify Edinburgh school data + outreach, now including real pricing) is deferred until closer to launch.
-- If a more distinctive visual language is wanted later, it should be layered back on top of this wireframe once core flows (reviews, accounts, more cities) are built and proven — not before.
-- **Revisit link colour once real brand colour lands.** Body-copy links currently use `text-decoration: underline` as their only affordance (`a[style*="var(--orange)"] { text-decoration: underline; }`) because this pass is black/white only and `--orange` is temporarily just `--text`'s value. Once a real accent colour is introduced, decide whether links go back to colour-only, keep colour *and* underline, or something else — don't just silently drop the underline without deciding that's actually wanted.
+- Real photography/logo assets still don't exist — listing/profile image tiles are still flat-fill initials, not photos. This blocks the source doc's "trending course cards" photo slots and any "trust grid" avatar imagery.
+- ~~Task #9 (real per-licence pricing)~~ — done, all three Edinburgh schools have real prices (see "School data corrections" below).
+- ~~Revisit link colour once real brand colour lands~~ — done by this v2 pass: colour (`--orange`) is now the differentiator, underline moved to hover-only. See Colour tokens.
+- **This branch (`claude/design-v2-carwow`) hasn't been merged.** If it's adopted, fold this file's "v2" framing into the main status line and drop the "test, not yet merged" caveat. If it's rejected, revert to v1 (see Archived directions) rather than leaving the site in a half-migrated state.
+- Space Grotesk's weight-800 gap (see Typography) only matters once step-numeral/licence-code components that call for it actually get built — currently a non-issue since neither exists.
+- If an even more distinctive visual language is wanted later, it should build on this v2 pass (or v1, if v2 isn't adopted) once core flows (reviews, accounts, more cities) are built and proven — not before.
 
 ## UX audit fixes (accessibility pass)
 
