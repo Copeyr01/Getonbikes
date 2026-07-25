@@ -81,6 +81,11 @@ window.Schools = (function () {
     return { text: miles.toFixed(1) + ' mi away', unavailable: false };
   }
 
+  // EMT's Full A course runs into four figures (£1,140) — needs a
+  // thousands separator or it reads like a typo next to three-figure
+  // prices from other schools.
+  function formatPrice(n) { return n.toLocaleString('en-GB'); }
+
   // "Prices from £X" (lowest across whatever the school offers) by
   // default; the exact figure for a specific licence once that's what's
   // being searched.
@@ -93,13 +98,13 @@ window.Schools = (function () {
     // back to a different licence's price, which would misrepresent it.
     if (activeLicence && licences.indexOf(activeLicence) !== -1) {
       return school.prices[activeLicence] !== undefined
-        ? LICENCE_LABELS[activeLicence] + ' — £' + school.prices[activeLicence]
+        ? LICENCE_LABELS[activeLicence] + ' — £' + formatPrice(school.prices[activeLicence])
         : LICENCE_LABELS[activeLicence] + ' — price on request';
     }
 
     var prices = licences.map(function (l) { return school.prices[l]; }).filter(function (p) { return p !== undefined; });
     if (prices.length === 0) return null;
-    return 'Prices from £' + Math.min.apply(null, prices);
+    return 'Prices from £' + formatPrice(Math.min.apply(null, prices));
   }
 
   // Pure filter — combinable, not mutually-exclusive modes. licence and q
@@ -253,7 +258,7 @@ window.Schools = (function () {
     els.forEach(function (el) {
       var licence = el.getAttribute('data-licence');
       el.textContent = school.prices[licence] !== undefined
-        ? '£' + school.prices[licence]
+        ? '£' + formatPrice(school.prices[licence])
         : 'Price on request';
     });
   }
