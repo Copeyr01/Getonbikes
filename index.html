@@ -149,37 +149,60 @@
 
 <main id="main-content">
 
-<section class="hero">
-  <div class="container hero__grid">
-    <div class="hero__content">
-    <p class="hero__eyebrow text-label">Now live in Edinburgh</p>
-    <h1>The fastest way to find and compare motorbike training schools in Edinburgh.</h1>
-    <p class="hero__subtitle">Every CBT, A1, A2 and Full A course in one search — real schools, real prices, no spin.</p>
-
-    <div class="search-tabs" role="tablist">
-      <button type="button" class="search-tab search-tab--active" id="tab-licence" data-tab="licence" role="tab" aria-selected="true">Search by Licence</button>
-      <button type="button" class="search-tab" id="tab-school" data-tab="school" role="tab" aria-selected="false">Search by School</button>
-    </div>
-
-    <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
-      <div class="search-row">
-        <div class="hero-search search-row__licence">
-          <select id="licence-select" aria-label="Choose a licence">
-            <option value="">All licences</option>
-            <option value="cbt">CBT</option>
-            <option value="a1">A1</option>
-            <option value="a2">A2</option>
-            <option value="full-a">Full A</option>
-          </select>
+<section class="hero" style="padding: 32px 0 40px;">
+  <div class="container">
+    <div class="hero-banner-wrap">
+      <div class="hero-banner">
+        <img class="hero-banner__image" src="assets/images/hero-rider.webp" alt="A smiling rider putting on their helmet at a scenic overlook, with other riders and motorcycles in the background" width="1408" height="768">
+        <div class="hero-banner__scrim" aria-hidden="true"></div>
+        <div class="hero-banner__text">
+          <h1 class="hero-banner__title">Compare motorbike training near you</h1>
+          <p class="hero-banner__subtitle">Every CBT, A1, A2 and Full A course in one search — real prices, no spin.</p>
         </div>
-        <div class="hero-search search-row__postcode">
-          <label for="postcode-input" class="sr-only">Postcode</label>
-          <input type="text" class="hero-search__input" id="postcode-input" placeholder="Postcode (optional)">
-        </div>
-        <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
       </div>
-      <p class="field-error" id="postcode-error" hidden></p>
-    </form>
+
+      <div class="hero-banner__search">
+        <div class="search-tabs" role="tablist">
+          <button type="button" class="search-tab search-tab--active" id="tab-licence" data-tab="licence" role="tab" aria-selected="true">Search by Licence</button>
+          <button type="button" class="search-tab" id="tab-school" data-tab="school" role="tab" aria-selected="false">Search by School</button>
+        </div>
+
+        <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
+          <div class="search-row">
+            <div class="search-field">
+              <label class="search-field__label" for="licence-select">Licence</label>
+              <div class="hero-search search-row__licence">
+                <select id="licence-select">
+                  <option value="">All licences</option>
+                  <option value="cbt">CBT</option>
+                  <option value="a1">A1</option>
+                  <option value="a2">A2</option>
+                  <option value="full-a">Full A</option>
+                </select>
+              </div>
+            </div>
+            <div class="search-field">
+              <label class="search-field__label" for="postcode-input">Postcode</label>
+              <div class="hero-search search-row__postcode">
+                <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
+          </div>
+          <p class="field-error" id="postcode-error" hidden></p>
+        </form>
+
+        <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
+          <div class="search-field">
+            <label class="search-field__label" for="school-search-input">School name</label>
+            <form class="hero-search" id="school-form" autocomplete="off">
+              <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
+            </form>
+          </div>
+          <div class="search-results" id="search-results" hidden></div>
+        </div>
+      </div>
+    </div>
 
     <div class="search-panel" data-panel="licence" id="quiz-wrap">
       <button type="button" class="quiz-callout" id="quiz-toggle" aria-expanded="false" aria-controls="licence-quiz">
@@ -233,23 +256,11 @@
       </div>
     </div>
 
-    <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
-      <form class="hero-search" id="school-form" autocomplete="off">
-        <label for="school-search-input" class="sr-only">School name</label>
-        <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
-      </form>
-      <div class="search-results" id="search-results" hidden></div>
-    </div>
-
     <div class="hero__stats text-body-sm" style="color:var(--text-3)">
+      <span class="text-semibold" style="color:var(--text)">Now live in Edinburgh</span>
       <span><span class="text-semibold" style="color:var(--text)" id="stat-schools">3</span> Edinburgh schools listed</span>
       <span><span class="text-semibold" style="color:var(--text)" id="stat-licences">4</span> licence types covered</span>
       <span><span class="text-semibold" style="color:var(--text)">0</span> reviews so far — be the first</span>
-    </div>
-    </div>
-
-    <div class="hero__media">
-      <img class="hero__image" src="assets/images/hero-rider.webp" alt="A smiling rider putting on their helmet at a scenic overlook, with other riders and motorcycles in the background" width="1408" height="768">
     </div>
   </div>
 </section>
