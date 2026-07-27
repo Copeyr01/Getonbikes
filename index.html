@@ -178,39 +178,41 @@
             <button type="button" class="search-tab" id="tab-school" data-tab="school" role="tab" aria-selected="false">Search by School</button>
           </div>
 
-          <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
-            <div class="search-row">
-              <div class="search-field">
-                <label class="search-field__label" for="licence-select">Licence</label>
-                <div class="hero-search search-row__licence">
-                  <select id="licence-select">
-                    <option value="">All licences</option>
-                    <option value="cbt">CBT</option>
-                    <option value="a1">A1</option>
-                    <option value="a2">A2</option>
-                    <option value="full-a">Full A</option>
-                  </select>
+          <div class="search-panels">
+            <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
+              <div class="search-row">
+                <div class="search-field">
+                  <label class="search-field__label" for="licence-select">Licence</label>
+                  <div class="hero-search search-row__licence">
+                    <select id="licence-select">
+                      <option value="">All licences</option>
+                      <option value="cbt">CBT</option>
+                      <option value="a1">A1</option>
+                      <option value="a2">A2</option>
+                      <option value="full-a">Full A</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="search-field">
-                <label class="search-field__label" for="postcode-input">Postcode</label>
-                <div class="hero-search search-row__postcode">
-                  <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
+                <div class="search-field">
+                  <label class="search-field__label" for="postcode-input">Postcode</label>
+                  <div class="hero-search search-row__postcode">
+                    <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
+                  </div>
                 </div>
+                <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
               </div>
-              <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
-            </div>
-            <p class="field-error" id="postcode-error" hidden></p>
-          </form>
+              <p class="field-error" id="postcode-error" hidden></p>
+            </form>
 
-          <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
-            <div class="search-field">
-              <label class="search-field__label" for="school-search-input">School name</label>
-              <form class="hero-search" id="school-form" autocomplete="off">
-                <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
-              </form>
+            <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
+              <div class="search-field">
+                <label class="search-field__label" for="school-search-input">School name</label>
+                <form class="hero-search" id="school-form" autocomplete="off">
+                  <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
+                </form>
+              </div>
+              <div class="search-results" id="search-results" hidden></div>
             </div>
-            <div class="search-results" id="search-results" hidden></div>
           </div>
         </div>
       </div>
