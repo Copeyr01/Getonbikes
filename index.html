@@ -19,22 +19,30 @@
 <meta name="twitter:image" content="https://getonbikes.vercel.app/og-image.png">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .search-tabs { display: flex; gap: 20px; margin-bottom: 16px; }
+  .search-tabs { display: flex; gap: 4px; margin: -24px -24px 20px; }
   .search-tab {
-    padding: 0;
+    flex: 1;
+    padding: 12px 14px;
     border: none;
-    background: none;
-    color: var(--text-3);
+    background: var(--off);
+    color: var(--text-2);
     font-weight: 600;
-    font-size: 0.9375rem;
+    font-size: 0.8125rem;
     font-family: inherit;
-    text-decoration: underline;
+    text-align: center;
     cursor: pointer;
+    border-radius: 0;
   }
-  .search-tab--active { color: var(--text); font-weight: 700; }
+  .search-tab:first-child { border-top-left-radius: var(--radius-xl); }
+  .search-tab:last-child { border-top-right-radius: var(--radius-xl); }
+  .search-tab--active {
+    background: var(--white);
+    color: var(--text);
+    font-weight: 700;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
   .search-panel[hidden] { display: none; }
-  .search-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .search-row__licence { min-width: 180px; }
+  .search-row { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
   .search-row__licence select {
     width: 100%;
     height: 100%;
@@ -46,8 +54,8 @@
     color: var(--text);
     outline: none;
   }
-  .search-row__postcode { flex: 1; min-width: 200px; margin: 0; }
-  .search-row__submit { flex-shrink: 0; height: 52px; }
+  .search-row__postcode { margin: 0; }
+  .search-row__submit { width: 100%; height: 48px; }
   .field-error { color: var(--text-2); font-size: 0.8125rem; margin-top: 8px; }
   .search-wrap { position: relative; }
   .search-results {
@@ -149,7 +157,7 @@
 
 <main id="main-content">
 
-<section class="hero" style="padding: 32px 0 40px;">
+<section class="hero" style="padding: 0 0 40px;">
   <div class="container">
     <div class="hero-banner-wrap">
       <div class="hero-banner">
@@ -159,47 +167,47 @@
           <h1 class="hero-banner__title">Compare motorbike training near you</h1>
           <p class="hero-banner__subtitle">Every CBT, A1, A2 and Full A course in one search — real prices, no spin.</p>
         </div>
-      </div>
 
-      <div class="hero-banner__search">
-        <div class="search-tabs" role="tablist">
-          <button type="button" class="search-tab search-tab--active" id="tab-licence" data-tab="licence" role="tab" aria-selected="true">Search by Licence</button>
-          <button type="button" class="search-tab" id="tab-school" data-tab="school" role="tab" aria-selected="false">Search by School</button>
-        </div>
-
-        <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
-          <div class="search-row">
-            <div class="search-field">
-              <label class="search-field__label" for="licence-select">Licence</label>
-              <div class="hero-search search-row__licence">
-                <select id="licence-select">
-                  <option value="">All licences</option>
-                  <option value="cbt">CBT</option>
-                  <option value="a1">A1</option>
-                  <option value="a2">A2</option>
-                  <option value="full-a">Full A</option>
-                </select>
-              </div>
-            </div>
-            <div class="search-field">
-              <label class="search-field__label" for="postcode-input">Postcode</label>
-              <div class="hero-search search-row__postcode">
-                <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
-              </div>
-            </div>
-            <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
+        <div class="hero-banner__search">
+          <div class="search-tabs" role="tablist">
+            <button type="button" class="search-tab search-tab--active" id="tab-licence" data-tab="licence" role="tab" aria-selected="true">Search by Licence</button>
+            <button type="button" class="search-tab" id="tab-school" data-tab="school" role="tab" aria-selected="false">Search by School</button>
           </div>
-          <p class="field-error" id="postcode-error" hidden></p>
-        </form>
 
-        <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
-          <div class="search-field">
-            <label class="search-field__label" for="school-search-input">School name</label>
-            <form class="hero-search" id="school-form" autocomplete="off">
-              <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
-            </form>
+          <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
+            <div class="search-row">
+              <div class="search-field">
+                <label class="search-field__label" for="licence-select">Licence</label>
+                <div class="hero-search search-row__licence">
+                  <select id="licence-select">
+                    <option value="">All licences</option>
+                    <option value="cbt">CBT</option>
+                    <option value="a1">A1</option>
+                    <option value="a2">A2</option>
+                    <option value="full-a">Full A</option>
+                  </select>
+                </div>
+              </div>
+              <div class="search-field">
+                <label class="search-field__label" for="postcode-input">Postcode</label>
+                <div class="hero-search search-row__postcode">
+                  <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
+                </div>
+              </div>
+              <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
+            </div>
+            <p class="field-error" id="postcode-error" hidden></p>
+          </form>
+
+          <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
+            <div class="search-field">
+              <label class="search-field__label" for="school-search-input">School name</label>
+              <form class="hero-search" id="school-form" autocomplete="off">
+                <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
+              </form>
+            </div>
+            <div class="search-results" id="search-results" hidden></div>
           </div>
-          <div class="search-results" id="search-results" hidden></div>
         </div>
       </div>
     </div>
