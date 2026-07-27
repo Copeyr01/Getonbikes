@@ -698,8 +698,8 @@ p,
   justify-content: center;
   width: 40px;
   height: 40px;
-  border: 1px solid var(--border);
-  background: var(--white);
+  border: none;
+  background: transparent;
   color: var(--text);
   cursor: pointer;
 }
