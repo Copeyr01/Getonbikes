@@ -827,10 +827,23 @@ p,
 }
 
 @media (max-width: 860px) {
+  .hero-banner-wrap {
+    overflow-x: hidden;
+  }
+
   .hero-banner {
-    min-height: 320px;
-    align-items: flex-end;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    border-radius: 0;
+    min-height: 620px;
+    align-items: stretch;
+    justify-content: flex-start;
     padding: 24px;
+  }
+
+  .hero-banner__scrim {
+    background: linear-gradient(180deg, rgba(10, 20, 40, 0.78) 0%, rgba(10, 20, 40, 0.4) 38%, rgba(10, 20, 40, 0.08) 62%, rgba(10, 20, 40, 0) 100%);
   }
 
   .hero-banner__title {
@@ -842,11 +855,13 @@ p,
   }
 
   .hero-banner__search {
-    position: static;
+    position: absolute;
+    top: auto;
+    bottom: 24px;
+    left: 24px;
+    right: 24px;
     transform: none;
-    width: 100%;
-    margin-top: 16px;
-    box-shadow: var(--shadow-md);
+    width: auto;
   }
 }
 
