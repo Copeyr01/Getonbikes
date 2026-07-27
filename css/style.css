@@ -827,10 +827,6 @@ p,
 }
 
 @media (max-width: 860px) {
-  .hero-banner-wrap {
-    overflow-x: hidden;
-  }
-
   .hero-banner {
     width: 100vw;
     margin-left: calc(50% - 50vw);
