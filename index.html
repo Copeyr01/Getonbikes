@@ -19,13 +19,13 @@
 <meta name="twitter:image" content="https://getonbikes.vercel.app/og-image.png">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .search-tabs { display: flex; gap: 4px; margin: -24px -24px 20px; }
+  .search-tabs { display: flex; gap: 4px; margin: -24px -24px 20px; border-bottom: 1px solid var(--border); }
   .search-tab {
     flex: 1;
     padding: 12px 14px;
     border: none;
-    background: var(--off);
-    color: var(--text-2);
+    background: transparent;
+    color: var(--text-3);
     font-weight: 600;
     font-size: 0.8125rem;
     font-family: inherit;
@@ -33,12 +33,13 @@
     cursor: pointer;
     border-radius: 0;
   }
-  .search-tab:first-child { border-top-left-radius: var(--radius-xl); }
-  .search-tab:last-child { border-top-right-radius: var(--radius-xl); }
   .search-tab--active {
     background: var(--white);
     color: var(--text);
     font-weight: 700;
+    border: 1px solid var(--border);
+    border-bottom-color: var(--white);
+    margin-bottom: -1px;
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   }
   .search-panel[hidden] { display: none; }

@@ -804,6 +804,10 @@ p,
   text-transform: uppercase;
 }
 
+.hero-banner__search .hero-search {
+  background: var(--white);
+}
+
 @media (max-width: 860px) {
   .hero-banner {
     width: 100vw;
