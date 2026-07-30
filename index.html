@@ -19,77 +19,46 @@
 <meta name="twitter:image" content="https://getonbikes.vercel.app/og-image.png">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .search-tabs { display: flex; gap: 20px; margin-bottom: 16px; }
-  .search-tab {
-    padding: 0;
-    border: none;
-    background: none;
-    color: var(--text-3);
-    font-weight: 600;
-    font-size: 0.9375rem;
-    font-family: inherit;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  .search-tab--active { color: var(--text); font-weight: 700; }
-  .search-panel[hidden] { display: none; }
-  .search-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .search-row__licence { min-width: 180px; }
+  .search-row { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
   .search-row__licence select {
     width: 100%;
     height: 100%;
+    -webkit-appearance: none;
+    appearance: none;
     border: none;
-    background: transparent;
-    padding: 0 16px;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%238A93A0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E") no-repeat right 16px center;
+    padding: 0 36px 0 16px;
     font-size: 0.9375rem;
     font-family: inherit;
     color: var(--text);
+    -webkit-text-fill-color: var(--text);
     outline: none;
   }
-  .search-row__postcode { flex: 1; min-width: 200px; margin: 0; }
-  .search-row__submit { flex-shrink: 0; height: 52px; }
+  .search-row__postcode { margin: 0; }
+  .search-row__submit { width: 100%; height: 48px; }
   .field-error { color: var(--text-2); font-size: 0.8125rem; margin-top: 8px; }
-  .search-wrap { position: relative; }
-  .search-results {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-hover);
-    overflow: hidden;
-    z-index: 50;
-  }
-  .search-result {
+
+  .quiz-callout {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--border);
-  }
-  .search-result:last-child { border-bottom: none; }
-  .search-result:hover { background: var(--off); }
-  .search-result__name { margin: 0; font-weight: 700; font-size: 0.9375rem; color: var(--text); }
-  .search-result__meta { margin: 2px 0 0; font-size: 0.8125rem; color: var(--text-3); }
-  .search-empty { padding: 16px 18px; font-size: 0.875rem; color: var(--text-3); }
-
-  .quiz-toggle {
-    display: inline-block;
-    margin-top: 14px;
-    padding: 0;
-    border: none;
-    background: none;
-    color: var(--text-3);
-    font-weight: 600;
-    font-size: 0.875rem;
+    gap: 14px;
+    width: 100%;
+    margin-top: 16px;
+    padding: 16px 20px;
+    border: 1px solid var(--orange);
+    border-radius: var(--radius-lg);
+    background: var(--orange-light);
     font-family: inherit;
-    text-decoration: underline;
+    text-align: left;
     cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
   }
-  .quiz-toggle:hover { color: var(--text); }
+  .quiz-callout:hover { background: #DCEBFA; }
+  .quiz-callout__icon { font-size: 1.5rem; line-height: 1; flex-shrink: 0; }
+  .quiz-callout__text { flex: 1; min-width: 0; }
+  .quiz-callout__title { display: block; font-weight: 700; font-size: 0.9375rem; color: var(--text); }
+  .quiz-callout__desc { display: block; font-weight: 400; font-size: 0.8125rem; color: var(--text-2); margin-top: 2px; }
+  .quiz-callout__cta { flex-shrink: 0; font-weight: 700; font-size: 0.875rem; color: var(--orange); white-space: nowrap; }
   .licence-quiz { margin-top: 16px; text-align: left; }
   .licence-quiz[hidden] { display: none; }
   .quiz-fieldset { border: 0; padding: 0; margin: 0 0 20px; }
@@ -142,39 +111,55 @@
 
 <main id="main-content">
 
-<section class="hero">
+<section class="hero" style="padding: 0 0 40px;">
   <div class="container">
-    <p class="hero__eyebrow text-label">Now live in Edinburgh</p>
-    <h1>The fastest way to find and compare motorbike training schools in Edinburgh.</h1>
-    <p class="hero__subtitle">Every CBT, A1, A2 and Full A course in one search — real schools, real prices, no spin.</p>
+    <div class="hero-banner-wrap">
+      <div class="hero-banner">
+        <img class="hero-banner__image" src="assets/images/hero-rider.webp" alt="A smiling rider putting on their helmet at a scenic overlook, with other riders and motorcycles in the background" width="1408" height="768">
+        <div class="hero-banner__scrim" aria-hidden="true"></div>
+        <div class="hero-banner__text">
+          <h1 class="hero-banner__title">Compare motorbike training near you</h1>
+          <p class="hero-banner__subtitle">Every CBT, A1, A2 and Full A course in one search — real prices, no spin.</p>
+        </div>
 
-    <div class="search-tabs" role="tablist">
-      <button type="button" class="search-tab search-tab--active" id="tab-licence" data-tab="licence" role="tab" aria-selected="true">Search by Licence</button>
-      <button type="button" class="search-tab" id="tab-school" data-tab="school" role="tab" aria-selected="false">Search by School</button>
+        <div class="hero-banner__search">
+          <form id="licence-form" autocomplete="off">
+            <div class="search-row">
+              <div class="search-field">
+                <label class="search-field__label" for="licence-select">Licence</label>
+                <div class="hero-search search-row__licence">
+                  <select id="licence-select">
+                    <option value="">All licences</option>
+                    <option value="cbt">CBT</option>
+                    <option value="a1">A1</option>
+                    <option value="a2">A2</option>
+                    <option value="full-a">Full A</option>
+                  </select>
+                </div>
+              </div>
+              <div class="search-field">
+                <label class="search-field__label" for="postcode-input">Postcode</label>
+                <div class="hero-search search-row__postcode">
+                  <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
+                </div>
+              </div>
+              <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
+            </div>
+            <p class="field-error" id="postcode-error" hidden></p>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
-      <div class="search-row">
-        <div class="hero-search search-row__licence">
-          <select id="licence-select" aria-label="Choose a licence">
-            <option value="">All licences</option>
-            <option value="cbt">CBT</option>
-            <option value="a1">A1</option>
-            <option value="a2">A2</option>
-            <option value="full-a">Full A</option>
-          </select>
-        </div>
-        <div class="hero-search search-row__postcode">
-          <label for="postcode-input" class="sr-only">Postcode</label>
-          <input type="text" class="hero-search__input" id="postcode-input" placeholder="Postcode (optional)">
-        </div>
-        <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
-      </div>
-      <p class="field-error" id="postcode-error" hidden></p>
-    </form>
-
-    <div class="search-panel" data-panel="licence" id="quiz-wrap">
-      <button type="button" class="quiz-toggle" id="quiz-toggle" aria-expanded="false" aria-controls="licence-quiz">Not sure what you need? Take the 30-second quiz</button>
+    <div id="quiz-wrap">
+      <button type="button" class="quiz-callout" id="quiz-toggle" aria-expanded="false" aria-controls="licence-quiz">
+        <span class="quiz-callout__icon" aria-hidden="true">🤔</span>
+        <span class="quiz-callout__text">
+          <span class="quiz-callout__title">Not sure what you need?</span>
+          <span class="quiz-callout__desc">Answer 2 quick questions and we'll tell you which licence to look for.</span>
+        </span>
+        <span class="quiz-callout__cta" id="quiz-toggle-cta">Take the quiz →</span>
+      </button>
 
       <div class="licence-quiz content-card" id="licence-quiz" hidden>
         <fieldset class="quiz-fieldset">
@@ -218,15 +203,8 @@
       </div>
     </div>
 
-    <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
-      <form class="hero-search" id="school-form" autocomplete="off">
-        <label for="school-search-input" class="sr-only">School name</label>
-        <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
-      </form>
-      <div class="search-results" id="search-results" hidden></div>
-    </div>
-
     <div class="hero__stats text-body-sm" style="color:var(--text-3)">
+      <span class="text-semibold" style="color:var(--text)">Now live in Edinburgh</span>
       <span><span class="text-semibold" style="color:var(--text)" id="stat-schools">3</span> Edinburgh schools listed</span>
       <span><span class="text-semibold" style="color:var(--text)" id="stat-licences">4</span> licence types covered</span>
       <span><span class="text-semibold" style="color:var(--text)">0</span> reviews so far — be the first</span>
@@ -286,11 +264,11 @@
 <footer class="footer">
   <div class="container footer__grid">
     <div>
-      <p class="text-label" style="color:#fff; margin: 0 0 12px;"><span class="accent">Up</span>shift</p>
+      <p class="text-label" style="color:var(--text); margin: 0 0 12px;"><span class="accent">Up</span>shift</p>
       <p class="text-body-sm">The fastest way to find and compare motorbike training in Edinburgh.</p>
     </div>
     <div>
-      <p class="text-label" style="color:#fff; margin: 0 0 12px;">Licences</p>
+      <p class="text-label" style="color:var(--text); margin: 0 0 12px;">Licences</p>
       <ul style="display:flex; flex-direction:column; gap:8px;">
         <li><a href="pages/licence-guide.html#cbt" class="text-body-sm">CBT</a></li>
         <li><a href="pages/licence-guide.html#a1" class="text-body-sm">A1</a></li>
@@ -300,7 +278,7 @@
       </ul>
     </div>
     <div>
-      <p class="text-label" style="color:#fff; margin: 0 0 12px;">Company</p>
+      <p class="text-label" style="color:var(--text); margin: 0 0 12px;">Company</p>
       <ul style="display:flex; flex-direction:column; gap:8px;">
         <li><a href="pages/about-us.html" class="text-body-sm">About us</a></li>
         <li><a href="pages/how-we-rank-schools.html" class="text-body-sm">How we rank schools</a></li>
@@ -309,7 +287,7 @@
       </ul>
     </div>
     <div>
-      <p class="text-label" style="color:#fff; margin: 0 0 12px;">Legal</p>
+      <p class="text-label" style="color:var(--text); margin: 0 0 12px;">Legal</p>
       <ul style="display:flex; flex-direction:column; gap:8px;">
         <li><a href="pages/privacy-policy.html" class="text-body-sm">Privacy policy</a></li>
         <li><a href="pages/terms-of-use.html" class="text-body-sm">Terms of use</a></li>
@@ -317,7 +295,7 @@
       </ul>
     </div>
   </div>
-  <div class="container" style="border-top: 1px solid rgba(255,255,255,0.15); margin-top: 32px; padding-top: 20px;">
+  <div class="container" style="border-top: 1px solid var(--border); margin-top: 32px; padding-top: 20px;">
     <p class="text-fine">© 2026 Upshift. All rights reserved.</p>
   </div>
 </footer>
@@ -328,18 +306,10 @@
 (function () {
   var navInput = document.getElementById('nav-search-input');
 
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.search-tab'));
-  var panels = Array.prototype.slice.call(document.querySelectorAll('.search-panel'));
-
   var licenceForm = document.getElementById('licence-form');
   var licenceSelect = document.getElementById('licence-select');
   var postcodeInput = document.getElementById('postcode-input');
   var postcodeError = document.getElementById('postcode-error');
-
-  var schoolForm = document.getElementById('school-form');
-  var schoolInput = document.getElementById('school-search-input');
-  var searchResults = document.getElementById('search-results');
-  var searchWrap = document.querySelector('.search-wrap');
 
   var EDINBURGH_SCHOOLS = SCHOOLS.filter(function (s) { return s.city === 'edinburgh'; });
 
@@ -359,55 +329,9 @@
     if (el) el.textContent = count + (count === 1 ? ' school' : ' schools');
   });
 
-  function renderSchoolDropdown(query) {
-    var q = Schools.norm(query);
-    if (!q) {
-      searchResults.hidden = true;
-      searchResults.innerHTML = '';
-      return;
-    }
-
-    var matches = EDINBURGH_SCHOOLS.filter(function (school) {
-      return Schools.norm(school.name).indexOf(q) !== -1 || Schools.norm(school.area).indexOf(q) !== -1;
-    });
-
-    if (matches.length === 0) {
-      searchResults.innerHTML = '<div class="search-empty">No schools match "' + query + '".</div>';
-    } else {
-      searchResults.innerHTML = matches.map(function (school) {
-        var badges = school.licences.map(function (l) { return Schools.LICENCE_LABELS[l]; }).join(' · ');
-        var meta = school.area + ' · ' + badges;
-        var price = Schools.priceLabel(school);
-        if (price) meta = price + ' · ' + meta;
-        return '<a class="search-result" href="' + school.href + '">' +
-          '<div>' +
-            '<p class="search-result__name">' + school.name + '</p>' +
-            '<p class="search-result__meta">' + meta + '</p>' +
-          '</div>' +
-          '<span>→</span>' +
-        '</a>';
-      }).join('');
-    }
-    searchResults.hidden = false;
-  }
-
-  // -- Tabs --------------------------------------------------------------
-  tabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      tabs.forEach(function (t) {
-        t.classList.remove('search-tab--active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('search-tab--active');
-      tab.setAttribute('aria-selected', 'true');
-      panels.forEach(function (p) { p.hidden = p.dataset.panel !== tab.dataset.tab; });
-      searchResults.hidden = true;
-    });
-  });
-
-  // -- "Search by Licence" panel: hands off to schools.html, which owns
-  // the actual filtering/results — the homepage only does the fast,
-  // synchronous postcode-format check before navigating. -------------------
+  // -- Hero search: hands off to schools.html, which owns the actual
+  // filtering/results — the homepage only does the fast, synchronous
+  // postcode-format check before navigating. -------------------------------
   licenceForm.addEventListener('submit', function (e) {
     e.preventDefault();
     postcodeError.hidden = true;
@@ -426,33 +350,11 @@
     });
   });
 
-  // -- "Search by School" panel: live dropdown for a quick jump straight
-  // to a profile; submitting without picking one hands off to
-  // schools.html for the full result set. ---------------------------------
-  schoolInput.addEventListener('input', function () {
-    renderSchoolDropdown(schoolInput.value);
-  });
-
-  schoolInput.addEventListener('focus', function () {
-    if (schoolInput.value.trim()) renderSchoolDropdown(schoolInput.value);
-  });
-
-  document.addEventListener('click', function (e) {
-    if (!searchWrap.contains(e.target)) {
-      searchResults.hidden = true;
-    }
-  });
-
-  schoolInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') searchResults.hidden = true;
-  });
-
-  schoolForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    location.href = 'schools.html?' + Schools.toQueryString({ city: 'edinburgh', q: schoolInput.value.trim() });
-  });
-
-  // Top-nav quick search: hand off to schools.html.
+  // Top-nav search: name/area lookup, lives here since the hero dropped
+  // its own "Search by School" tab (redundant with this, and with only
+  // 3 schools in the directory a name search barely earns its keep yet —
+  // worth revisiting once the directory covers more cities/schools).
+  // Hands off to schools.html.
   if (navInput) {
     navInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
@@ -487,11 +389,12 @@
     return age === '19-23' && (held === 'none' || held === 'cbt');
   }
 
+  var quizToggleCta = document.getElementById('quiz-toggle-cta');
   quizToggle.addEventListener('click', function () {
     var show = quizPanel.hidden;
     quizPanel.hidden = !show;
     quizToggle.setAttribute('aria-expanded', String(show));
-    quizToggle.textContent = show ? 'Hide the quiz' : 'Not sure what you need? Take the 30-second quiz';
+    quizToggleCta.textContent = show ? 'Hide the quiz ↑' : 'Take the quiz →';
   });
 
   quizPanel.addEventListener('change', function () {
