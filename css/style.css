@@ -804,26 +804,6 @@ p,
   text-transform: uppercase;
 }
 
-/* Both tab panels are stacked in the same grid cell (rather than only
-   the active one being in flow) so the cell's height always reserves
-   space for the taller panel - switching tabs no longer resizes the
-   card (and the banner around it). align-items:start keeps each
-   panel at its own natural height instead of stretching to match. */
-.search-panels {
-  display: grid;
-  align-items: start;
-}
-
-.search-panels .search-panel {
-  grid-area: 1 / 1;
-}
-
-.search-panels .search-panel[hidden] {
-  display: block;
-  visibility: hidden;
-  pointer-events: none;
-}
-
 .hero-banner__search .hero-search {
   background: var(--white);
 }

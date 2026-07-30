@@ -19,30 +19,6 @@
 <meta name="twitter:image" content="https://getonbikes.vercel.app/og-image.png">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .search-tabs { display: flex; gap: 4px; margin: -24px -24px 20px; border-bottom: 1px solid var(--border); }
-  .search-tab {
-    flex: 1;
-    padding: 12px 14px;
-    border: none;
-    background: transparent;
-    color: var(--text-3);
-    font-weight: 600;
-    font-size: 0.8125rem;
-    font-family: inherit;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 0;
-  }
-  .search-tab--active {
-    background: var(--white);
-    color: var(--text);
-    font-weight: 700;
-    border: 1px solid var(--border);
-    border-bottom-color: var(--white);
-    margin-bottom: -1px;
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  }
-  .search-panel[hidden] { display: none; }
   .search-row { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
   .search-row__licence select {
     width: 100%;
@@ -61,32 +37,6 @@
   .search-row__postcode { margin: 0; }
   .search-row__submit { width: 100%; height: 48px; }
   .field-error { color: var(--text-2); font-size: 0.8125rem; margin-top: 8px; }
-  .search-wrap { position: relative; }
-  .search-results {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-hover);
-    overflow: hidden;
-    z-index: 50;
-  }
-  .search-result {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--border);
-  }
-  .search-result:last-child { border-bottom: none; }
-  .search-result:hover { background: var(--off); }
-  .search-result__name { margin: 0; font-weight: 700; font-size: 0.9375rem; color: var(--text); }
-  .search-result__meta { margin: 2px 0 0; font-size: 0.8125rem; color: var(--text-3); }
-  .search-empty { padding: 16px 18px; font-size: 0.875rem; color: var(--text-3); }
 
   .quiz-callout {
     display: flex;
@@ -173,52 +123,35 @@
         </div>
 
         <div class="hero-banner__search">
-          <div class="search-tabs" role="tablist">
-            <button type="button" class="search-tab search-tab--active" id="tab-licence" data-tab="licence" role="tab" aria-selected="true">Search by Licence</button>
-            <button type="button" class="search-tab" id="tab-school" data-tab="school" role="tab" aria-selected="false">Search by School</button>
-          </div>
-
-          <div class="search-panels">
-            <form class="search-panel" data-panel="licence" id="licence-form" autocomplete="off">
-              <div class="search-row">
-                <div class="search-field">
-                  <label class="search-field__label" for="licence-select">Licence</label>
-                  <div class="hero-search search-row__licence">
-                    <select id="licence-select">
-                      <option value="">All licences</option>
-                      <option value="cbt">CBT</option>
-                      <option value="a1">A1</option>
-                      <option value="a2">A2</option>
-                      <option value="full-a">Full A</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="search-field">
-                  <label class="search-field__label" for="postcode-input">Postcode</label>
-                  <div class="hero-search search-row__postcode">
-                    <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
-                  </div>
-                </div>
-                <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
-              </div>
-              <p class="field-error" id="postcode-error" hidden></p>
-            </form>
-
-            <div class="search-panel search-wrap" data-panel="school" id="school-panel" hidden>
+          <form id="licence-form" autocomplete="off">
+            <div class="search-row">
               <div class="search-field">
-                <label class="search-field__label" for="school-search-input">School name</label>
-                <form class="hero-search" id="school-form" autocomplete="off">
-                  <input type="text" class="hero-search__input" id="school-search-input" placeholder="Search by school name">
-                </form>
+                <label class="search-field__label" for="licence-select">Licence</label>
+                <div class="hero-search search-row__licence">
+                  <select id="licence-select">
+                    <option value="">All licences</option>
+                    <option value="cbt">CBT</option>
+                    <option value="a1">A1</option>
+                    <option value="a2">A2</option>
+                    <option value="full-a">Full A</option>
+                  </select>
+                </div>
               </div>
-              <div class="search-results" id="search-results" hidden></div>
+              <div class="search-field">
+                <label class="search-field__label" for="postcode-input">Postcode</label>
+                <div class="hero-search search-row__postcode">
+                  <input type="text" class="hero-search__input" id="postcode-input" placeholder="Optional">
+                </div>
+              </div>
+              <button type="submit" class="btn btn--primary search-row__submit">Find schools</button>
             </div>
-          </div>
+            <p class="field-error" id="postcode-error" hidden></p>
+          </form>
         </div>
       </div>
     </div>
 
-    <div class="search-panel" data-panel="licence" id="quiz-wrap">
+    <div id="quiz-wrap">
       <button type="button" class="quiz-callout" id="quiz-toggle" aria-expanded="false" aria-controls="licence-quiz">
         <span class="quiz-callout__icon" aria-hidden="true">🤔</span>
         <span class="quiz-callout__text">
@@ -373,18 +306,10 @@
 (function () {
   var navInput = document.getElementById('nav-search-input');
 
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.search-tab'));
-  var panels = Array.prototype.slice.call(document.querySelectorAll('.search-panel'));
-
   var licenceForm = document.getElementById('licence-form');
   var licenceSelect = document.getElementById('licence-select');
   var postcodeInput = document.getElementById('postcode-input');
   var postcodeError = document.getElementById('postcode-error');
-
-  var schoolForm = document.getElementById('school-form');
-  var schoolInput = document.getElementById('school-search-input');
-  var searchResults = document.getElementById('search-results');
-  var searchWrap = document.querySelector('.search-wrap');
 
   var EDINBURGH_SCHOOLS = SCHOOLS.filter(function (s) { return s.city === 'edinburgh'; });
 
@@ -404,55 +329,9 @@
     if (el) el.textContent = count + (count === 1 ? ' school' : ' schools');
   });
 
-  function renderSchoolDropdown(query) {
-    var q = Schools.norm(query);
-    if (!q) {
-      searchResults.hidden = true;
-      searchResults.innerHTML = '';
-      return;
-    }
-
-    var matches = EDINBURGH_SCHOOLS.filter(function (school) {
-      return Schools.norm(school.name).indexOf(q) !== -1 || Schools.norm(school.area).indexOf(q) !== -1;
-    });
-
-    if (matches.length === 0) {
-      searchResults.innerHTML = '<div class="search-empty">No schools match "' + query + '".</div>';
-    } else {
-      searchResults.innerHTML = matches.map(function (school) {
-        var badges = school.licences.map(function (l) { return Schools.LICENCE_LABELS[l]; }).join(' · ');
-        var meta = school.area + ' · ' + badges;
-        var price = Schools.priceLabel(school);
-        if (price) meta = price + ' · ' + meta;
-        return '<a class="search-result" href="' + school.href + '">' +
-          '<div>' +
-            '<p class="search-result__name">' + school.name + '</p>' +
-            '<p class="search-result__meta">' + meta + '</p>' +
-          '</div>' +
-          '<span>→</span>' +
-        '</a>';
-      }).join('');
-    }
-    searchResults.hidden = false;
-  }
-
-  // -- Tabs --------------------------------------------------------------
-  tabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      tabs.forEach(function (t) {
-        t.classList.remove('search-tab--active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('search-tab--active');
-      tab.setAttribute('aria-selected', 'true');
-      panels.forEach(function (p) { p.hidden = p.dataset.panel !== tab.dataset.tab; });
-      searchResults.hidden = true;
-    });
-  });
-
-  // -- "Search by Licence" panel: hands off to schools.html, which owns
-  // the actual filtering/results — the homepage only does the fast,
-  // synchronous postcode-format check before navigating. -------------------
+  // -- Hero search: hands off to schools.html, which owns the actual
+  // filtering/results — the homepage only does the fast, synchronous
+  // postcode-format check before navigating. -------------------------------
   licenceForm.addEventListener('submit', function (e) {
     e.preventDefault();
     postcodeError.hidden = true;
@@ -471,33 +350,11 @@
     });
   });
 
-  // -- "Search by School" panel: live dropdown for a quick jump straight
-  // to a profile; submitting without picking one hands off to
-  // schools.html for the full result set. ---------------------------------
-  schoolInput.addEventListener('input', function () {
-    renderSchoolDropdown(schoolInput.value);
-  });
-
-  schoolInput.addEventListener('focus', function () {
-    if (schoolInput.value.trim()) renderSchoolDropdown(schoolInput.value);
-  });
-
-  document.addEventListener('click', function (e) {
-    if (!searchWrap.contains(e.target)) {
-      searchResults.hidden = true;
-    }
-  });
-
-  schoolInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') searchResults.hidden = true;
-  });
-
-  schoolForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    location.href = 'schools.html?' + Schools.toQueryString({ city: 'edinburgh', q: schoolInput.value.trim() });
-  });
-
-  // Top-nav quick search: hand off to schools.html.
+  // Top-nav search: name/area lookup, lives here since the hero dropped
+  // its own "Search by School" tab (redundant with this, and with only
+  // 3 schools in the directory a name search barely earns its keep yet —
+  // worth revisiting once the directory covers more cities/schools).
+  // Hands off to schools.html.
   if (navInput) {
     navInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
